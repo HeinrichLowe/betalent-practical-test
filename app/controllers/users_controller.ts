@@ -2,6 +2,7 @@ import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import { roleVerify } from '../helpers/role_verify.js'
 import { createUserValidator, updateUserValidator } from '#validators/user'
+import { roles } from '../constants/roles.js'
 
 export default class UsersController {
   /**
@@ -10,12 +11,12 @@ export default class UsersController {
   async index({ auth, response }: HttpContext) {
     const user = auth.user!
 
-    if (!roleVerify(user, ['ADMIN', 'MANAGER'], response)) {
+    if (!roleVerify(user, [...roles.manager], response)) {
       return
     }
 
     const users = await User.query().select('id', 'email', 'role', 'created_at')
-    return response.json(users)
+    return response.ok(users)
   }
 
   /**
@@ -29,14 +30,14 @@ export default class UsersController {
   async store({ auth, request, response }: HttpContext) {
     const user = auth.user!
 
-    if (!roleVerify(user, ['ADMIN', 'MANAGER'], response)) {
+    if (!roleVerify(user, [...roles.manager], response)) {
       return
     }
 
     const { email, password, role } = await request.validateUsing(createUserValidator)
     const newUser = await User.create({ email, password, role })
 
-    return response.status(201).json(newUser)
+    return response.created(newUser)
   }
 
   /**
@@ -46,7 +47,7 @@ export default class UsersController {
     try {
       const user = auth.user!
 
-      if (!roleVerify(user, ['ADMIN', 'MANAGER'], response)) {
+      if (!roleVerify(user, [...roles.manager], response)) {
         return
       }
 
@@ -54,9 +55,7 @@ export default class UsersController {
 
       return showUser
     } catch (error) {
-      return response
-        .status(error.status || 404)
-        .json({ error: error.messages || 'User not found' })
+      return response.notFound({ error: error.messages || 'User not found' })
     }
   }
 
@@ -72,7 +71,7 @@ export default class UsersController {
     try {
       const user = auth.user!
 
-      if (!roleVerify(user, ['ADMIN', 'MANAGER'], response)) {
+      if (!roleVerify(user, [...roles.manager], response)) {
         return
       }
 
@@ -83,9 +82,7 @@ export default class UsersController {
       await updateUser.save()
       return updateUser
     } catch (error) {
-      return response
-        .status(error.status || 404)
-        .json({ error: error.messages || 'User not found' })
+      return response.notFound({ error: error.messages || 'User not found' })
     }
   }
 
@@ -96,14 +93,14 @@ export default class UsersController {
     try {
       const user = auth.user!
 
-      if (!roleVerify(user, ['ADMIN', 'MANAGER'], response)) {
+      if (!roleVerify(user, [...roles.manager], response)) {
         return
       }
 
       const delUser = await User.findByOrFail('id', params.id)
       await delUser.delete()
 
-      return response.status(200).json({ message: 'User deleted' })
+      return response.ok({ message: 'User deleted' })
     } catch (error) {
       return response.notFound({ message: 'User not found or already deleted' })
     }

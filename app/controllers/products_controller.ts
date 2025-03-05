@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { roleVerify } from '../helpers/role_verify.js'
-import { ROLES } from '../constants/roles.js'
+import { roles } from '../constants/roles.js'
 import Product from '#models/product'
 import { createProductValidator, updateProductValidator } from '#validators/product'
 
@@ -11,7 +11,7 @@ export default class ProductsController {
   async index({ auth, response }: HttpContext) {
     const user = auth.user!
 
-    if (!roleVerify(user, [...ROLES], response)) {
+    if (!roleVerify(user, [...roles.user], response)) {
       return
     }
 
@@ -31,13 +31,7 @@ export default class ProductsController {
   async store({ auth, request, response }: HttpContext) {
     const user = auth.user!
 
-    if (
-      !roleVerify(
-        user,
-        ROLES.filter((role) => role !== 'USER'),
-        response
-      )
-    ) {
+    if (!roleVerify(user, [...roles.finance], response)) {
       return
     }
 
@@ -54,7 +48,7 @@ export default class ProductsController {
     try {
       const user = auth.user!
 
-      if (!roleVerify(user, [...ROLES], response)) {
+      if (!roleVerify(user, [...roles.user], response)) {
         return
       }
 
@@ -77,13 +71,7 @@ export default class ProductsController {
     try {
       const user = auth.user!
 
-      if (
-        !roleVerify(
-          user,
-          ROLES.filter((role) => role !== 'USER'),
-          response
-        )
-      ) {
+      if (!roleVerify(user, [...roles.finance], response)) {
         return
       }
 
@@ -105,13 +93,7 @@ export default class ProductsController {
     try {
       const user = auth.user!
 
-      if (
-        !roleVerify(
-          user,
-          ROLES.filter((role) => role !== 'USER'),
-          response
-        )
-      ) {
+      if (!roleVerify(user, [...roles.finance], response)) {
         return
       }
 
