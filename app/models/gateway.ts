@@ -9,6 +9,12 @@ export default class Gateway extends BaseModel {
   declare name: string
 
   @column()
+  declare base_url: string
+
+  @column()
+  declare requires_auth: boolean
+
+  @column()
   declare is_active: boolean
 
   @column()

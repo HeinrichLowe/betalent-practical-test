@@ -13,6 +13,7 @@ const AuthController = () => import('#controllers/auth_controller')
 const UsersController = () => import('#controllers/users_controller')
 const ClientsController = () => import('#controllers/clients_controller')
 const ProductsController = () => import('#controllers/products_controller')
+const GatewaysController = () => import('#controllers/gateways_controller')
 
 // Test route
 router.get('/ping', async () => {
@@ -37,5 +38,10 @@ router
 
     // Product Routes
     router.resource('products', ProductsController).apiOnly()
+
+    // Gateways Routes
+    router.resource('gateways', GatewaysController).apiOnly()
+    router.patch('gateways/:id/active', [GatewaysController, 'updateActive'])
+    router.patch('gateways/:id/priority', [GatewaysController, 'updatePriority'])
   })
   .use(middleware.auth())
