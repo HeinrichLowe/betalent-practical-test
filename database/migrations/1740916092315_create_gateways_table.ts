@@ -7,8 +7,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.raw('(UUID())')).notNullable()
       table.string('name')
+      table.string('base_url').unique().notNullable()
+      table.boolean('requires_auth').defaultTo(false).notNullable()
       table.boolean('is_active').defaultTo(false).notNullable()
-      table.integer('priority').unsigned().notNullable().unique()
+      table.integer('priority').unsigned().unique().notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
