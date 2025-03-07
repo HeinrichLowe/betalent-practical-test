@@ -48,5 +48,6 @@ router
 
     // Transactions Routes
     router.get('transactions', [TransactionsController, 'index'])
+    router.post('transactions/:id/refund', [TransactionsController, 'refund'])
   })
   .use(middleware.auth())

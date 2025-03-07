@@ -24,6 +24,9 @@ export default class Transaction extends BaseModel {
   declare external_id: string
 
   @column()
+  declare status: string
+
+  @column()
   declare amount: number
 
   @column()

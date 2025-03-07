@@ -5,12 +5,9 @@ import Transaction from '#models/transaction'
 import Client from '#models/client'
 import Gateway from '#models/gateway'
 import { createPurchaseValidator } from '#validators/transaction'
-import { processPayment } from '#services/gateway_services'
+import { processPayment, processRefund } from '#services/gateway_services'
 
 export default class TransactionsController {
-  /**
-   * Display a list of resource
-   */
   async index({ auth, response }: HttpContext) {
     const user = auth.user!
 
@@ -18,19 +15,11 @@ export default class TransactionsController {
       return
     }
 
-    const transactions = await Transaction.query().orderBy('created_at', 'asc')
+    const transactions = await Transaction.query().orderBy('created_at', 'desc')
 
     return response.ok(transactions)
   }
 
-  /**
-   * Display form to create a new record
-   */
-  //async create({}: HttpContext) {}
-
-  /**
-   * Handle form submission for the create action
-   */
   async store({ request, response }: HttpContext) {
     try {
       const payload = await request.validateUsing(createPurchaseValidator)
@@ -73,23 +62,38 @@ export default class TransactionsController {
     }
   }
 
-  /**
-   * Show individual record
-   */
-  //async show({ params }: HttpContext) {}
+  async refund({ auth, params, response }: HttpContext) {
+    try {
+      const user = auth.user!
+      const rolex = roles.finance.filter((role) => role === 'ADMIN' || role === 'FINANCE')
+      if (!roleVerify(user, rolex, response)) {
+        return
+      }
 
-  /**
-   * Edit individual record
-   */
-  //async edit({ params }: HttpContext) {}
+      const transaction = await Transaction.findOrFail(params.id)
 
-  /**
-   * Handle form submission for the edit action
-   */
-  //async update({ params, request }: HttpContext) {}
+      if (transaction.status === 'refunded') {
+        return response.badRequest({ message: 'Esta transação já foi reembolsada' })
+      }
 
-  /**
-   * Delete record
-   */
-  //async destroy({ params }: HttpContext) {}
+      const gateway = await Gateway.findOrFail(transaction.gatewayId)
+
+      if (!gateway.is_active) {
+        return response.serviceUnavailable({ message: `${gateway.name} está inativo` })
+      }
+
+      const refundResult = await processRefund(gateway, transaction)
+
+      if (!refundResult.success) {
+        return response.status(502).json({ message: 'Reembolso falhou no gateway' })
+      }
+
+      transaction.status = 'refunded'
+      await transaction.save()
+
+      return response.ok(transaction)
+    } catch (error) {
+      response.internalServerError(error)
+    }
+  }
 }
