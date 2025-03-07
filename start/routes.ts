@@ -14,6 +14,7 @@ const UsersController = () => import('#controllers/users_controller')
 const ClientsController = () => import('#controllers/clients_controller')
 const ProductsController = () => import('#controllers/products_controller')
 const GatewaysController = () => import('#controllers/gateways_controller')
+const TransactionsController = () => import('#controllers/transactions_controller')
 
 // Test route
 router.get('/ping', async () => {
@@ -24,6 +25,7 @@ router.get('/ping', async () => {
 
 // Public Routes
 router.post('login', [AuthController, 'store'])
+router.post('purchase', [TransactionsController, 'store'])
 
 // Private Routes
 router
@@ -43,5 +45,8 @@ router
     router.resource('gateways', GatewaysController).apiOnly()
     router.patch('gateways/:id/active', [GatewaysController, 'updateActive'])
     router.patch('gateways/:id/priority', [GatewaysController, 'updatePriority'])
+
+    // Transactions Routes
+    router.get('transactions', [TransactionsController, 'index'])
   })
   .use(middleware.auth())
