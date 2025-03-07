@@ -1,15 +1,21 @@
 import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import User from './user.js'
 import { type BelongsTo } from '@adonisjs/lucid/types/relations'
 import Gateway from './gateway.js'
+import Client from './client.js'
 
 export default class Transaction extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
-  @belongsTo(() => User)
-  declare client: BelongsTo<typeof User>
+  @column()
+  declare clientId: string
+
+  @belongsTo(() => Client)
+  declare client: BelongsTo<typeof Client>
+
+  @column()
+  declare gatewayId: string
 
   @belongsTo(() => Gateway)
   declare gateway: BelongsTo<typeof Gateway>
@@ -21,7 +27,7 @@ export default class Transaction extends BaseModel {
   declare amount: number
 
   @column()
-  declare card_last_numbers: string
+  declare cardLastNumbers: string
 
   @column({
     prepare: (value: any) => JSON.stringify(value),

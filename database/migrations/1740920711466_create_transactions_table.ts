@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.uuid('id').primary().defaultTo(this.raw('(UUID())')).notNullable()
 
       table
-        .uuid('client')
+        .uuid('client_id')
         .references('id')
         .inTable('clients')
         .onDelete('CASCADE')
@@ -16,7 +16,7 @@ export default class extends BaseSchema {
         .notNullable()
 
       table
-        .uuid('gateway')
+        .uuid('gateway_id')
         .references('id')
         .inTable('gateways')
         .onDelete('CASCADE')
