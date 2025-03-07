@@ -1,7 +1,7 @@
 import Gateway from '#models/gateway'
 import { type CreatePurchasePayload } from '#validators/transaction'
 
-export function mapPayloadForGateway(gateway: Gateway, payload: CreatePurchasePayload) {
+export function paymentProcessHelper(gateway: Gateway, payload: CreatePurchasePayload) {
   if (gateway.schema === 'EN') {
     return {
       data: {
