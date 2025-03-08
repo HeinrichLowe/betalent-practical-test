@@ -107,4 +107,23 @@ export default class ClientsController {
       return response.notFound({ message: 'Client not found or already deleted' })
     }
   }
+
+  /**
+   * Show individual record
+   */
+  async transactions({ auth, params, response }: HttpContext) {
+    try {
+      const user = auth.user!
+
+      if (!roleVerify(user, [...roles.finance], response)) {
+        return
+      }
+
+      const clientProducts = await Client.findByOrFail('id', params.id)
+      await clientProducts.load('transactions')
+      return response.ok(clientProducts)
+    } catch (error) {
+      return response.notFound({ message: 'Client not found' })
+    }
+  }
 }

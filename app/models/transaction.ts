@@ -34,9 +34,8 @@ export default class Transaction extends BaseModel {
 
   @column({
     prepare: (value: any) => JSON.stringify(value),
-    consume: (value: string) => JSON.parse(value),
   })
-  declare products: { product_id: number; quantity: number }[]
+  declare products: { id: string; name: string; price: number; quantity: number }[]
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

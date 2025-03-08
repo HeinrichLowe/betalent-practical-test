@@ -25,7 +25,7 @@ router.get('/ping', async () => {
 
 // Public Routes
 router.post('login', [AuthController, 'store'])
-router.post('purchase', [TransactionsController, 'store'])
+router.post('purchase', [TransactionsController, 'purchase'])
 
 // Private Routes
 router
@@ -37,6 +37,7 @@ router
 
     // Client Routes
     router.resource('clients', ClientsController).apiOnly()
+    router.get('clients/:id/transactions', [ClientsController, 'transactions'])
 
     // Product Routes
     router.resource('products', ProductsController).apiOnly()
@@ -47,7 +48,7 @@ router
     router.patch('gateways/:id/priority', [GatewaysController, 'updatePriority'])
 
     // Transactions Routes
-    router.get('transactions', [TransactionsController, 'index'])
+    router.resource('transactions', TransactionsController).apiOnly()
     router.post('transactions/:id/refund', [TransactionsController, 'refund'])
   })
   .use(middleware.auth())

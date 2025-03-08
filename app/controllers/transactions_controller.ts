@@ -24,9 +24,27 @@ export default class TransactionsController {
   }
 
   /**
+   * Show individual record
+   */
+  async show({ auth, params, response }: HttpContext) {
+    try {
+      const user = auth.user!
+
+      if (!roleVerify(user, [...roles.finance], response)) {
+        return
+      }
+
+      const showTransaction = await Transaction.findByOrFail('id', params.id)
+      return response.ok(showTransaction)
+    } catch (error) {
+      return response.notFound({ message: 'Transaction not found' })
+    }
+  }
+
+  /**
    * Handle form submission for the purchase action
    */
-  async store({ request, response }: HttpContext) {
+  async purchase({ request, response }: HttpContext) {
     try {
       const payload = await request.validateUsing(createPurchaseValidator)
 
@@ -34,12 +52,13 @@ export default class TransactionsController {
       const gateways = await Gateway.query().where('is_active', true).orderBy('priority', 'asc')
 
       if (gateways.length === 0) {
-        return response.status(500).json({ message: 'Nenhum gateway disponível' })
+        return response.internalServerError({ message: 'No gateway available' })
       }
 
       let successfulGateway
       let externalTransactionId
       let totalAmount
+      let allProducts
 
       for (const gateway of gateways) {
         const result = await processPayment(gateway, payload)
@@ -48,12 +67,13 @@ export default class TransactionsController {
           successfulGateway = gateway
           externalTransactionId = result.transactionId
           totalAmount = result.totalAmount
+          allProducts = result.allProducts
           break
         }
       }
 
       if (!successfulGateway) {
-        return response.status(502).json({ message: 'Pagamento recusado por todos os gateways' })
+        return response.badGateway({ message: 'Pagamento recusado por todos os gateways' })
       }
 
       const transaction = await Transaction.create({
@@ -63,9 +83,10 @@ export default class TransactionsController {
         amount: totalAmount,
         cardLastNumbers: payload.cardNumber.slice(-4),
         status: 'paid',
+        products: allProducts,
       })
 
-      return response.status(201).json(transaction)
+      return response.created(transaction)
     } catch (error) {
       return response.internalServerError(error)
     }

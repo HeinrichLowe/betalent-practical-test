@@ -46,6 +46,7 @@ export async function processPayment(gateway: Gateway, payload: CreatePurchasePa
       success: true,
       transactionId: typedResponseData.id,
       totalAmount: processedPayload.data.amount,
+      allProducts: processedPayload.data.products,
     }
   } catch (error) {
     console.error(`Erro ao processar pagamento no ${gateway.name}:`, error)
