@@ -13,7 +13,6 @@ export const createPurchaseValidator = vine.compile(
         quantity: vine.number().positive(),
       })
     ),
-    amount: vine.number().positive(),
     cardNumber: vine
       .string()
       .trim()

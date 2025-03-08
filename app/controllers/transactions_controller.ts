@@ -8,6 +8,9 @@ import { createPurchaseValidator } from '#validators/transaction'
 import { processPayment, processRefund } from '#services/gateway_services'
 
 export default class TransactionsController {
+  /**
+   * Display a list of resource
+   */
   async index({ auth, response }: HttpContext) {
     const user = auth.user!
 
@@ -20,6 +23,9 @@ export default class TransactionsController {
     return response.ok(transactions)
   }
 
+  /**
+   * Handle form submission for the purchase action
+   */
   async store({ request, response }: HttpContext) {
     try {
       const payload = await request.validateUsing(createPurchaseValidator)
@@ -33,6 +39,7 @@ export default class TransactionsController {
 
       let successfulGateway
       let externalTransactionId
+      let totalAmount
 
       for (const gateway of gateways) {
         const result = await processPayment(gateway, payload)
@@ -40,6 +47,7 @@ export default class TransactionsController {
         if (result.success) {
           successfulGateway = gateway
           externalTransactionId = result.transactionId
+          totalAmount = result.totalAmount
           break
         }
       }
@@ -52,8 +60,9 @@ export default class TransactionsController {
         clientId: client.id,
         gatewayId: successfulGateway.id,
         external_id: externalTransactionId,
-        amount: payload.amount,
+        amount: totalAmount,
         cardLastNumbers: payload.cardNumber.slice(-4),
+        status: 'paid',
       })
 
       return response.status(201).json(transaction)
@@ -62,6 +71,9 @@ export default class TransactionsController {
     }
   }
 
+  /**
+   * Handle form submission for the refund action
+   */
   async refund({ auth, params, response }: HttpContext) {
     try {
       const user = auth.user!

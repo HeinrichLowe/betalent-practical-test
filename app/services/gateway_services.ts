@@ -17,9 +17,9 @@ import { refundProcessHelper } from '../helpers/refund_process_helper.js'
 
 export async function processPayment(gateway: Gateway, payload: CreatePurchasePayload) {
   try {
-    const mappedPayload = paymentProcessHelper(gateway, payload)
+    const processedPayload = await paymentProcessHelper(gateway, payload)
 
-    const url = `${gateway.base_url}/${mappedPayload.endPoint}`
+    const url = `${gateway.base_url}/${processedPayload.endPoint}`
     const headers = gateway.requires_auth
       ? {
           'Gateway-Auth-Token': 'tk_f2198cc671b5289fa856',
@@ -33,7 +33,7 @@ export async function processPayment(gateway: Gateway, payload: CreatePurchasePa
         'Content-Type': 'application/json',
         ...headers,
       },
-      body: JSON.stringify(mappedPayload.data),
+      body: JSON.stringify(processedPayload.data),
     })
 
     if (!response.ok) {
@@ -45,6 +45,7 @@ export async function processPayment(gateway: Gateway, payload: CreatePurchasePa
     return {
       success: true,
       transactionId: typedResponseData.id,
+      totalAmount: processedPayload.data.amount,
     }
   } catch (error) {
     console.error(`Erro ao processar pagamento no ${gateway.name}:`, error)

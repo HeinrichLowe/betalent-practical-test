@@ -9,8 +9,9 @@ export default class extends BaseSchema {
       table.string('name')
       table.string('base_url').unique().notNullable()
       table.string('schema', 2).defaultTo('EN').notNullable()
-      table.boolean('requires_auth').defaultTo(false).notNullable()
       table.boolean('is_active').defaultTo(false).notNullable()
+      table.boolean('requires_auth').defaultTo(false).notNullable()
+      table.string('auth_token').nullable()
       table.integer('priority').unsigned().unique().notNullable()
 
       table.timestamp('created_at')
