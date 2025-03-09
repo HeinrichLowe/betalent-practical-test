@@ -1,253 +1,168 @@
-# Teste Prático Back-end BeTalent
+# 📌 Descrição do Projeto
 
-[BeTalent Tech](https://betalent.tech/) é uma software house que conecta *talentos incríveis* a negócios, para criar e desenvolver produtos e serviços digitais eficientes.
+Este projeto consiste em uma API para gerenciamento de transações utilizando múltiplos gateways de pagamento. O sistema permite autenticação de usuários com diferentes roles, manipulação de produtos, clientes e transações, além de suportar reembolsos.
 
-Este é nosso **Teste Prático** para seleção de talentos back-end. É necessário estar participando de um de nossos processos seletivos para submeter este teste para avaliação. 
+## 🚀 **Principais Funcionalidades**
 
-> [!WARNING]
-> É necessário estar participando de uma de nossas seleções de talentos para submeter este teste à avaliação. Se você fizer esse teste e nos enviar sem estar participando de um processo seletivo, sua solução não será avaliada.
-  
-## 📋 Sobre o Teste
+- CRUD de usuários, clientes e produtos.
+- Gerenciamento de gateways de pagamento (ativação/desativação, prioridade e autenticação).
+- Processamento de compras, considerando múltiplos produtos e integração dinâmica com gateways.
+- Rota para detalhar uma compra específica.
+- Suporte a reembolsos.
+- Controle de acesso baseado em roles (`ADMIN`, `MANAGER`, `FINANCE`, `USER`).
+- Implementação de autenticação para gateways.
+- **(Pendente)** Implementação de testes unitários seguindo **TDD**.
 
-Este teste foi estruturado em níveis progressivos de complexidade, permitindo que você demonstre suas habilidades de acordo com sua experiência. Você pode optar por implementar um ou mais níveis, e sua avaliação será baseada na qualidade do código e funcionalidades implementadas em cada nível escolhido.
+---
 
-## 🎯 O Desafio
+## 🛠 **Tecnologias Utilizadas**
 
-O teste consiste em estruturar uma API RESTful conectada a um banco de dados e a duas APIs de terceiros.
+- **AdonisJS** (framework backend)
+- **TypeScript**
+- **PostgreSQL** (banco de dados)
+- **Mock Docker com Auth** ❌ (Não implementado por falta de tempo)
+- **Testes Unitários** ❌ (Não implementado por falta de tempo)
 
-Trata-se de um sistema gerenciador de pagamentos multi-gateway. Ao realizar uma compra, deve-se tentar realizar a cobrança junto aos gateways, seguindo a ordem de prioridade definida. Caso o primeiro gateway resulte em erro, deve-se fazer a tentativa no segundo gateway. Se algum gateway retornar sucesso, não deve ser informado erro no retorno da API.
+---
 
-Deve ser levada em consideração a facilidade de adicionar novos gateways de forma simples e modular na API, no futuro.
+## 📌 **Configuração e Instalação**
 
-Você pode clonar este repositório para facilitar o desenvolvimento.
+### **1. Clonar o repositório**
 
-### Frameworks aceitos
-- [Adonis](https://adonisjs.com/) 5 ou superior (Node.js)
-- [Laravel](https://laravel.com/) 10 ou superior (PHP)
-
-## 📊 Níveis de implementação
-
-### Nível 1
-Escolha esse nível se você se considera iniciante ou júnior, por exemplo:
-- Valor da compra vem direto pela API
-- Gateways sem autenticação
-
-### Nível 2
-Escolha esse nível se você é júnior experiente ou pleno, por exemplo:
-- Valor da compra vem do produto e suas quantidades calculada via back
-- Gateways com autenticação
-
-### Nível 3
-Escolha esse nível se você é pleno ou sênior, por exemplo:
-- Valor da compra vem de múltiplos produtos e suas quantidades selecionadas e calculada via back
-- Gateways com autenticação
-- Usuários tem roles:
-  - ADMIN - faz tudo
-  - MANAGER - pode gerenciar produtos e usuários
-  - FINANCE - pode gerenciar produtos e realizar reembolso
-  - USER - pode o resto que não foi citado
-- Uso de TDD
-- Docker compose com MySQL, aplicação e mock dos gateways
-
-## 🗄 Estrutura do Banco de Dados
-
-O banco de dados deve ser estruturado à sua escolha, mas minimamente deve conter:
-
-- **users**
-  - email
-  - password
-  - role
-- **gateways**
-  - name
-  - is_active
-  - priority
-- **clients**
-  - name
-  - email
-- **products**
-  - name
-  - amount
-- **transaction_products**
-  - transaction_id
-  - product_id
-  - quantity
-- **transactions**
-  - client
-  - gateway
-  - external_id
-  - status
-  - amount
-  - card_last_numbers
-  - [product_id, quantity] (exclusivo do nível 2)
-
-## 🛣 Rotas do Sistema
-
-### Rotas Públicas
-- Realizar o login
-- Realizar uma compra informando o produto
-
-### Rotas Privadas
-- Ativar/desativar um gateway
-- Alterar a prioridade de um gateway
-- CRUD de usuários com validação por roles
-- CRUD de produtos com validação por roles
-- Listar todos os clientes
-- Detalhe do cliente e todas suas compras
-- Listar todas as compras
-- Detalhes de uma compra
-- Realizar reembolso de uma compra junto ao gateway com validação por roles
-
-## 🔧 Requisitos Técnicos
-
-### Obrigatórios
-- MySQL como banco de dados
-- Respostas devem ser em JSON
-- ORM para gestão do banco (Eloquent, Lucid, Knex, Bookshelf etc.)
-- Validação de dados (VineJS, etc.)
-- README detalhado com:
-  - Requisitos
-  - Como instalar e rodar o projeto
-  - Detalhamento de rotas
-  - Outras informações relevantes
-- Implementar TDD
-- Docker compose com MySQL, aplicação e mock dos gateways
-
-## 🔌 Multi-Gateways
-
-Para auxiliar no desenvolvimento, disponibilizamos:
-
-- esta [Collection](https://api.postman.com/collections/37798616-3e618a0f-a01b-4186-9b99-dec8d1affbb9?access_key=PMAT-01JCK3XCWSXX7JJ5Y6CK3GP0BK) para você usar no Postman, no Insomnia ou em outras ferramentas de sua preferência;
-- no arquivo [multigateways_payment_api.json](https://github.com/BeMobile/desafio-back-end/blob/main/multigateways_payment_api.json), contido neste repositório.
-
-### Rodando os Mocks
-
-**Com autenticação:**
 ```bash
-docker run -p 3001:3001 -p 3002:3002 matheusprotzen/gateways-mock
+git clone https://github.com/HeinrichLowe/betalent-practical-test.git
 ```
 
-**Sem autenticação:**
+### **2. Instalar as dependências**
+
+```bash
+npm install
+```
+
+### **3. Configurar variáveis de ambiente**
+
+Copie o arquivo `.env.example` e renomeie para `.env`, ajustando as configurações do banco de dados e gateways.
+
+### **4. Executar migrações do banco de dados**
+
+```bash
+node ace migration:run
+```
+
+### **5. Iniciar o servidor**
+
+```bash
+node ace serve --watch
+```
+
+### **6. Iniciar o mock Docker (Sem Auth)**
+
 ```bash
 docker run -p 3001:3001 -p 3002:3002 -e REMOVE_AUTH='true' matheusprotzen/gateways-mock
 ```
 
-O Gateway 1 ficará disponível em http://localhost:3001 e o Gateway 2 em http://localhost:3002.
-
-### Gateway 1 (http://localhost:3001)
-
-#### Login
-```http
-POST /login
-```
-```json
-{
-  "email": "dev@betalent.tech",
-  "token": "FEC9BB078BF338F464F96B48089EB498"
-}
-```
-*Autenticação das seguintes rotas deve ser feita usando o Bearer token retornado da rota de login.*
-
-#### Listagem das transações
-```http
-GET /transactions
-```
-
-#### Criação de uma transação
-```http
-POST /transactions
-```
-```json
-{
-  "amount": 1000,
-  "name": "tester",
-  "email": "tester@email.com",
-  "cardNumber": "5569000000006063",
-  "cvv": "010"
-}
-```
-- `amount` - valor da compra em centavos
-- `name` - nome do comprador
-- `email` - email do comprador
-- `cardNumber` - número do cartão (16 dígitos)
-- `cvv` - cvv do cartão, ao usar cvv 100 ou 200 vai ser retornado um erro simulando dados inválidos do cartão
-
-#### Reembolso de uma transação
-```http
-POST /transactions/:id/charge_back
-```
-`:id` - id da transação
-
-### Gateway 2 (http://localhost:3002)
-
-*Autenticação das seguintes rotas deve ser feito usando os seguintes dados nos headers:*
-```
-Gateway-Auth-Token=tk_f2198cc671b5289fa856
-Gateway-Auth-Secret=3d15e8ed6131446ea7e3456728b1211f
-```
-
-#### Listagem das transações
-```http
-GET /transacoes
-```
-
-#### Criação de uma transação
-```http
-POST /transacoes
-```
-```json
-{
-  "valor": 1000,
-  "nome": "tester",
-  "email": "tester@email.com",
-  "numeroCartao": "5569000000006063",
-  "cvv": "010"
-}
-```
-- `valor` - valor da compra em centavos
-- `nome` - nome do comprador
-- `email` - email do comprador
-- `numeroCartao` - número do cartão (16 dígitos)
-- `cvv` - cvv do cartão, ao usar cvv 200 ou 300 vai ser retornado um erro simulando dados inválidos do cartão
-
-#### Reembolso de uma transação
-```http
-POST /transacoes/reembolso
-```
-```json
-{
-  "id": "3d15e8ed-6131-446e-a7e3-456728b1211f"
-}
-```
-* `id` - id da transação
-
-## 📝 Critérios de Avaliação
-
-Serão critérios para avaliação da solução fornecida:
-- Lógica de programação
-- Organização do projeto
-- Legibilidade do código
-- Validação necessária dos dados
-- Forma adequada de utilização dos recursos
-- Seguimento dos padrões especificados
-- Tratamento dos dados sensíveis corretamente
-- Clareza na documentação
-
-## ⏰ Considerações Finais
-
-Caso não consiga completar o teste até o prazo definido:
-- Garanta que tudo que foi construído esteja em funcionamento
-- Relate no README quais foram as dificuldades encontradas
-- Documente o que foi implementado e o que ficou pendente
-
-## 📤 Envio da Solução
-O projeto deverá ser hospedado em um repositório no seu GitHub. O link do repositório deverá ser fornecido por meio do formulário do processo seletivo do qual o(a) candidato(a) está participando. Não serão aceitos links de projetos enviados por outros meios.
-
-## 🎓 Comunidade BeTalent
-
-Aproveite para conhecer e se inscrever na **BeTalent Academy**, nossa newsletter na Substack: [https://beacademy.substack.com/](https://beacademy.substack.com/)
-
-**BeTalent Academy** é onde trazemos curadoria de tendências e dicas em tecnologia com a missão de levar conhecimento técnico e de liderança à **comunidade BeTalent**.
+A API estará disponível em `http://localhost:3333`.
 
 ---
 
-Boa sorte! 🍀
+## 🔒 **Autenticação e Controle de Acesso**
+
+A API utiliza autenticação JWT. Após o login, um token deve ser incluído nos headers das requisições:
+
+```json
+Authorization: Bearer <seu_token>
+```
+
+**Roles disponíveis:**
+
+- `ADMIN` → Acesso total ao sistema.
+- `MANAGER` → Gerencia produtos e usuários.
+- `FINANCE` → Gerencia produtos e realiza reembolsos.
+- `USER` → Pode realizar compras e visualizar suas próprias transações.
+
+---
+
+## 🛠 **Endpoints Principais**
+
+### **Autenticação**
+
+- `POST /login` → Autenticar usuário.
+- `POST /logout` → Encerrar sessão.
+
+### **Usuários**
+
+- `GET /users` → Listar usuários (**ADMIN**).
+- `POST /users` → Criar usuário (**ADMIN**).
+
+### **Gateways**
+
+- `GET /gateways` → Listar gateways.
+- `PATCH /gateways/:id/active` → Ativar/desativar gateway.
+- `PATCH /gateways/:id/priority` → Alterar prioridade do gateway.
+
+### **Transações**
+
+- `POST /purchase` → Realizar compra.
+- `GET /transactions/:id` → Detalhar uma compra (**Finance/Admin**).
+- `POST /transactions/:id/refund` → Processar reembolso (**Finance/Admin**).
+
+---
+
+## 📌 **Collection - (Postman, Insomnia ou outros)**
+
+Foi disponibilizado uma collection 'betalent_practical_test.json' para que possa ser usado no Postman, Insomnia ou em outras ferramentas de sua preferência. Ela auxiliará nos testes de todas as rotas disponíveis no projeto.
+
+## 🚀 **Próximos Passos**
+
+- [ ] Implementar testes unitários seguindo TDD.
+- [ ] Melhorar a documentação com exemplos de requisição/resposta.
+
+---
+
+### 📌 **Entrega Final:**
+
+O sistema está quase completo, restando apenas testes unitários, a implementação do Docker com AUTH. Infelizmente essas implementações foram descartados por limitações de tempo.
+
+---
+
+###
+
+# 📌 **Comentário e Observações:**
+
+### **Maiores dificuldades:**
+
+Enfrentei mais obstáculos do que gostaria de admitir durante o desenvolvimento do projeto, mas o momento de maior dificuldade foi entender os gateways. Embora já tivesse lidado com APIs de terceiros em projetos anteriores (especialmente em processos seletivos), este foi o mais complexo entre eles. Demorei bem mais tempo do que gostaria para me adaptar, mas, depois que entendi, o processo se tornou bem mais fácil.
+
+> **Observação:** Não que os gateways sejam difíceis de entender — na verdade, eles são até bem simples. Porém, como foi a primeira vez que lidei com gateways dessa forma, admito que me confundi um pouco até começar a mexer neles. Depois disso, como mencionei, ficou fácil lidar com eles. _Haha_
+
+## **Diferença nos Gateways:**
+
+Como os gateways possuem a mesma estrutura de dados, mudando apenas a "tradução" dos campos, criei um novo campo na _migration_ do gateway chamado `schema`. Nele, defino qual estrutura o gateway pode ter (neste caso, `EN` para a versão em inglês do gateway 1 e `PT` ou `BR` para a versão em português do gateway 2). Desde que os novos gateways sigam um desses dois _schemas_, é possível criar quantos forem necessários.
+
+No projeto, a função responsável por decidir qual _schema_ usar é a `paymentProcessHelper`. Claro que existem formas melhores de tornar isso ainda mais dinâmico, mas, infelizmente, não tive muito tempo disponível para implementar algo mais elaborado.
+
+---
+
+# 📌 **Considerações Finais:**
+
+Infelizmente, por falta de tempo, não consegui implementar e/ou melhorar tudo o que gostaria. Como nunca havia trabalhado com AdonisJS, precisei dedicar um tempo para aprender a utilizá-lo, e isso fez falta no final do processo.
+
+Sei que há partes do projeto que poderiam ter sido feitas de forma melhor. Como mencionei antes, eu tinha planos para melhorar algumas delas, mas, conforme o prazo foi se esgotando, tive que abrir mão de algumas melhorias para garantir que o projeto estivesse funcional.
+
+Admito também que, em alguns casos, a falta de experiência me limitou. Mesmo me considerando, na melhor das hipóteses, um desenvolvedor júnior um pouco mais avançado, ainda há muito para aprender até me tornar o profissional que almejo ser. _Haha_
+
+---
+
+## **Algumas Melhorias e/ou Implementações que ficaram de fora:**
+
+### **Melhorias:**
+
+- Gostaria de ter elaborado um sistema melhor de _roles_. Embora o atual funcione, ele é muito rígido e pouco dinâmico. Isso significa que, caso seja necessário criar ou alterar uma _role_, será preciso modificar o código, o que não é uma boa prática.
+
+- Também gostaria de ter desenvolvido uma solução melhor para lidar com as diferenças entre os gateways. Embora a abordagem atual funcione, ainda acho que ela é muito suscetível a falhas.
+
+### **Implementações:**
+
+- A principal implementação que ficou de fora — e que considero a mais crítica — foram os testes (unitários e de integração). Sei que por trás de todo código robusto sempre há uma série de testes que garantem seu pleno funcionamento, especialmente para futuras melhorias e expansão do projeto. Portanto, considero esse o meu maior "arrependimento" neste projeto. _Haha_
+
+- Gostaria de ter implementado o _Docker Compose_ para facilitar a execução do projeto. Normalmente, costumo configurá-lo em meus projetos, pois acho prático para quem deseja testar o código. No entanto, tive muitos problemas durante o desenvolvimento, e, com o prazo se esgotando, não conseguiria resolvê-los a tempo. Foi mais uma funcionalidade que precisei abrir mão para garantir que o projeto estivesse funcional dentro do prazo.
