@@ -16,10 +16,17 @@ const ProductsController = () => import('#controllers/products_controller')
 const GatewaysController = () => import('#controllers/gateways_controller')
 const TransactionsController = () => import('#controllers/transactions_controller')
 
-// Test route
+// Test Route
 router.get('/ping', async () => {
   return {
     ping: 'pong',
+  }
+})
+
+// Root Route
+router.get('/', async () => {
+  return {
+    status: 'online',
   }
 })
 

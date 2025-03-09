@@ -43,22 +43,70 @@ npm install
 
 Copie o arquivo `.env.example` e renomeie para `.env`, ajustando as configurações do banco de dados e gateways.
 
-### **4. Executar migrações do banco de dados**
+> OBS: Caso queira gerar a 'APP_KEY', basta usar o comando abaixo:
+
+```bash
+node ace generate:key
+```
+
+### **4. MySQL via Docker caso não o tenha instalado**
+
+```bash
+docker run -d --name mysql-heinrich -v mysql-heinrich:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql
+```
+
+> OBS: Certifique que exista um banco de dados no seu MySQL e que tenha o mesmo nome fonecido no '.env'. Caso contrário siga os passos abaixo para criar:
+
+- Verifique o nome ou id do container do MySQL:
+
+```bash
+docker ps
+```
+
+- Use o comando abaixo para entrar no terminal do MySQL:
+
+```bash
+docker exec -it mysql-heinrich mysql -u root -p
+```
+
+- Crie o banco de dados:
+  > OBS: Substitua o 'nova_base_de_dados' pelo nome que você definiu no '.env'.
+
+```bash
+CREATE DATABASE nova_base_de_dados;
+```
+
+- Por fim, para sair do terminal basta apenas:
+
+```bash
+exit
+```
+
+---
+
+### **5. Executar migrações do banco de dados**
 
 ```bash
 node ace migration:run
 ```
 
-### **5. Iniciar o servidor**
+### **6. Executar o(s) seed(s)**
+
+```bash
+node ace db:seed
+
+```
+
+### **7. Iniciar o servidor**
 
 ```bash
 node ace serve --watch
 ```
 
-### **6. Iniciar o mock Docker (Sem Auth)**
+### **8. Iniciar o mock Docker (Sem Auth)**
 
 ```bash
-docker run -p 3001:3001 -p 3002:3002 -e REMOVE_AUTH='true' matheusprotzen/gateways-mock
+docker run -d -p 3001:3001 -p 3002:3002 -e REMOVE_AUTH='true' matheusprotzen/gateways-mock
 ```
 
 A API estará disponível em `http://localhost:3333`.
